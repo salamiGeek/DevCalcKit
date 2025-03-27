@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const octDisplay = document.querySelector('.oct-display');
     const expressionDisplay = document.querySelector('.calculator-expression');
     const binaryDisplay = document.querySelector('.binary-representation');
-    const numSystemSelect = document.getElementById('num-system');
     const bitWidthSelect = document.getElementById('bit-width');
     const signedRadio = document.getElementById('signed');
     const unsignedRadio = document.getElementById('unsigned');
@@ -14,6 +13,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const hexKeys = document.querySelectorAll('.hex-key');
     // 获取进制标签元素
     const displayLabels = document.querySelectorAll('.display-label');
+    // 主题切换按钮
+    const themeButton = document.getElementById('theme-button');
+    const themeIcon = themeButton ? themeButton.querySelector('.material-symbols-rounded') : null;
+
+    // 主题设置
+    function initTheme() {
+        // 检查本地存储中是否有保存的主题设置
+        const savedTheme = localStorage.getItem('calculatorTheme');
+        
+        if (savedTheme) {
+            // 应用保存的主题
+            document.body.classList.add(savedTheme);
+            
+            // 更新图标
+            if (themeIcon) {
+                themeIcon.textContent = savedTheme === 'dark-theme' ? 'light_mode' : 'dark_mode';
+            }
+        } else {
+            // 检查系统偏好
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (prefersDarkScheme) {
+                document.body.classList.add('dark-theme');
+                if (themeIcon) themeIcon.textContent = 'light_mode';
+            }
+        }
+    }
+    
+    // 切换主题
+    function toggleTheme() {
+        if (document.body.classList.contains('dark-theme')) {
+            document.body.classList.replace('dark-theme', 'light-theme');
+            localStorage.setItem('calculatorTheme', 'light-theme');
+            if (themeIcon) themeIcon.textContent = 'dark_mode';
+        } else {
+            document.body.classList.replace('light-theme', 'dark-theme');
+            localStorage.setItem('calculatorTheme', 'dark-theme');
+            if (themeIcon) themeIcon.textContent = 'light_mode';
+        }
+    }
+    
+    // 绑定主题切换事件
+    if (themeButton) {
+        themeButton.addEventListener('click', toggleTheme);
+    }
+    
+    // 初始化主题
+    initTheme();
 
     // 计算器状态
     const state = {
@@ -227,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 bit.classList.add('group-end');
             }
             
-            // 为1添加高亮
+            // 为1添加高亮 - 更新使用Apple颜色变量
             if (binaryStr[i] === '1') {
                 bit.classList.add('bit-one');
             } else {
@@ -325,15 +372,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 显示范围警告
     function showRangeWarning(clampedValue) {
-        // 添加视觉警告样式到显示区域
-        display.classList.add('range-warning');
+        // 不再创建单独的警告元素，而是利用range-indicator元素
+        const rangeIndicator = document.querySelector('.range-indicator');
+        if (!rangeIndicator) return;
         
-        // 创建或更新警告提示
-        let warning = document.querySelector('.range-warning-message');
-        if (!warning) {
-            warning = document.createElement('div');
-            warning.className = 'range-warning-message';
-            calculator.appendChild(warning);
+        // 添加视觉警告样式到显示区域和范围指示器
+        display.classList.add('range-warning');
+        rangeIndicator.classList.add('warning-active');
+        
+        // 保存原始文本以便恢复
+        if (!rangeIndicator.dataset.originalText) {
+            rangeIndicator.dataset.originalText = rangeIndicator.textContent;
         }
         
         // 设置警告消息
@@ -341,26 +390,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (state.isSigned) {
             const maxValue = (1 << (bitWidth - 1)) - 1;
             const minValue = -(1 << (bitWidth - 1));
-            warning.textContent = `值已被限制在有符号${bitWidth}位范围内: ${minValue} ~ ${maxValue}`;
+            rangeIndicator.innerHTML = `<span class="warning-icon">⚠️</span> 值已被限制在有符号${bitWidth}位范围内: ${minValue} ~ ${maxValue}`;
         } else {
             const maxValue = (1 << bitWidth) - 1;
-            warning.textContent = `值已被限制在无符号${bitWidth}位范围内: 0 ~ ${maxValue}`;
+            rangeIndicator.innerHTML = `<span class="warning-icon">⚠️</span> 值已被限制在无符号${bitWidth}位范围内: 0 ~ ${maxValue}`;
         }
         
-        warning.classList.add('visible');
-        
-        // 两秒后自动消失
-        setTimeout(() => {
+        // 两秒后自动恢复
+        clearTimeout(window.rangeWarningTimeout);
+        window.rangeWarningTimeout = setTimeout(() => {
             clearRangeWarning();
-        }, 2000);
+        }, 3000);
     }
     
     // 清除范围警告
     function clearRangeWarning() {
         display.classList.remove('range-warning');
-        const warning = document.querySelector('.range-warning-message');
-        if (warning) {
-            warning.classList.remove('visible');
+        
+        const rangeIndicator = document.querySelector('.range-indicator');
+        if (rangeIndicator) {
+            rangeIndicator.classList.remove('warning-active');
+            
+            // 恢复原始文本
+            if (rangeIndicator.dataset.originalText) {
+                rangeIndicator.textContent = rangeIndicator.dataset.originalText;
+            }
+        }
+        
+        // 移除旧的警告元素（如果存在）
+        const oldWarning = document.querySelector('.range-warning-message');
+        if (oldWarning) {
+            oldWarning.remove();
         }
     }
 
@@ -743,30 +803,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // 显示临时模式变更通知
     function showModeChangeNotification(message) {
         try {
-            // 检查calculator元素是否存在
-            if (!calculator) {
-                console.warn('计算器元素未找到，无法显示模式变更通知');
-                return;
+            // 使用range-indicator元素来显示模式变更通知，保持界面一致性
+            const rangeIndicator = document.querySelector('.range-indicator');
+            if (!rangeIndicator) return;
+            
+            // 保存原始文本以便恢复
+            if (!rangeIndicator.dataset.originalText) {
+                rangeIndicator.dataset.originalText = rangeIndicator.textContent;
             }
             
-            // 检查是否已有通知元素存在
-            let notification = document.querySelector('.mode-change-notification');
+            // 添加模式变更样式
+            rangeIndicator.classList.add('mode-change-active');
             
-            // 如果不存在则创建
-            if (!notification) {
-                notification = document.createElement('div');
-                notification.className = 'mode-change-notification';
-                calculator.appendChild(notification);
+            // 设置消息
+            rangeIndicator.innerHTML = `<span class="mode-icon">🔄</span> ${message}`;
+            
+            // 一段时间后恢复原状
+            clearTimeout(window.modeChangeTimeout);
+            window.modeChangeTimeout = setTimeout(() => {
+                rangeIndicator.classList.remove('mode-change-active');
+                
+                // 恢复原始文本，但要避免与范围警告冲突
+                if (!rangeIndicator.classList.contains('warning-active') && rangeIndicator.dataset.originalText) {
+                    rangeIndicator.textContent = rangeIndicator.dataset.originalText;
+                }
+                
+            }, 2500);
+            
+            // 移除旧的通知元素（如果存在）
+            const oldNotification = document.querySelector('.mode-change-notification');
+            if (oldNotification) {
+                oldNotification.remove();
             }
-            
-            // 设置消息并显示
-            notification.textContent = message;
-            notification.classList.add('visible');
-            
-            // 淡出效果
-            setTimeout(() => {
-                notification.classList.remove('visible');
-            }, 2000);
         } catch (error) {
             console.error('显示模式变更通知时出错:', error);
         }
@@ -828,11 +896,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 数字系统选择器事件监听
-    numSystemSelect.addEventListener('change', () => {
-        changeNumberSystem(parseInt(numSystemSelect.value));
-    });
-    
     // 位宽选择器事件监听
     bitWidthSelect.addEventListener('change', () => {
         changeBitWidth(bitWidthSelect.value);
@@ -869,35 +932,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 为进制显示标签添加点击事件
+    // 为显示标签添加点击事件，点击后切换数字系统
     displayLabels.forEach(label => {
-        label.addEventListener('click', () => {
-            // 获取标签文本并转换为相应的进制值
-            const labelText = label.textContent.trim();
-            let numSystem = 10; // 默认十进制
-            
-            switch (labelText) {
-                case 'HEX':
-                    numSystem = 16;
-                    break;
-                case 'DEC':
-                    numSystem = 10;
-                    break;
-                case 'OCT':
-                    numSystem = 8;
-                    break;
-                case 'BIN':
-                    numSystem = 2;
-                    break;
-            }
-            
-            // 更新选择器的值以匹配点击的标签
-            numSystemSelect.value = numSystem;
-            
-            // 切换到对应的进制
-            changeNumberSystem(numSystem);
-        });
+        // 从data-system属性获取进制值
+        const system = label.dataset.system ? parseInt(label.dataset.system, 10) : null;
+        
+        if (system) {
+            label.addEventListener('click', () => {
+                // 只有当当前数字系统与点击的标签不同时才切换
+                if (state.numSystem !== system) {
+                    changeNumberSystem(system);
+                    
+                    // 显示反馈动画
+                    label.classList.add('label-clicked');
+                    setTimeout(() => {
+                        label.classList.remove('label-clicked');
+                    }, 300);
+                    
+                    // 更新计算器UI类名以反映当前进制
+                    updateCalculatorNumSystem(system);
+                }
+            });
+        }
     });
+    
+    // 根据数字系统更新计算器UI类
+    function updateCalculatorNumSystem(system) {
+        calculator.classList.remove('hex', 'dec', 'oct', 'bin');
+        
+        switch (system) {
+            case 16:
+                calculator.classList.add('hex');
+                break;
+            case 10:
+                calculator.classList.add('dec');
+                break;
+            case 8:
+                calculator.classList.add('oct');
+                break;
+            case 2:
+                calculator.classList.add('bin');
+                break;
+        }
+        
+        // 更新十六进制键的可用状态
+        updateHexKeysState();
+    }
     
     // 初始化计算器
     updateHexKeysState();
@@ -995,7 +1075,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 添加动态样式
+    // 添加计算器需要的动态样式
     addCalculatorStyles();
     
     // 确保所有显示内容初始化完成
@@ -1058,78 +1138,12 @@ function addCalculatorStyles() {
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
-        /* 范围警告样式 */
-        .range-warning {
-            animation: warning-flash 0.5s alternate 2;
-        }
-        
-        @keyframes warning-flash {
-            from { background-color: inherit; }
-            to { background-color: rgba(255, 82, 82, 0.3); }
-        }
-        
-        .range-warning-message {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #ff5252;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: 10;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .range-warning-message.visible {
-            opacity: 1;
-        }
-        
-        /* 模式切换通知 */
-        .mode-change-notification {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #2196f3;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: 10;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .mode-change-notification.visible {
-            opacity: 1;
-        }
-        
         /* 符号模式样式 */
         .calculator.signed-mode .signed-indicator,
         .calculator.unsigned-mode .unsigned-indicator {
             font-weight: bold;
             text-decoration: underline;
             color: #2196f3;
-        }
-        
-        /* 范围指示器样式 */
-        .range-indicator {
-            font-size: 12px;
-            color: #757575;
-            text-align: center;
-            margin-top: 5px;
-            padding: 4px;
-            background-color: #f1f1f1;
-            border-radius: 4px;
         }
     `;
     document.head.appendChild(style);

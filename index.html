@@ -10,103 +10,116 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>嵌入式程序员计算器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="嵌入式程序员专用计算器，支持十六进制、十进制、八进制和二进制的转换和计算">
+    <meta name="theme-color" content="#007AFF">
+    <title>程序员计算器</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=SF+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" />
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
-    <div class="calculator">
-        <div class="display-container">
-            <div class="calculator-expression"></div>
-            <div class="display-row">
-                <div class="display-label">HEX</div>
-                <div class="hex-display">FF</div>
-            </div>
-            <div class="display-row">
-                <div class="display-label">DEC</div>
-                <div class="calculator-display">255</div>
-            </div>
-            <div class="display-row">
-                <div class="display-label">OCT</div>
-                <div class="oct-display">377</div>
-            </div>
-            <div class="display-row">
-                <div class="display-label">BIN</div>
-                <div class="binary-representation">11111111</div>
-            </div>
-        </div>
-        
-        <div class="calculator-keypad">
-            <div class="hex-keys-row">
-                <button class="btn hex-key">A</button>
-                <button class="btn hex-key">B</button>
-                <button class="btn hex-key">C</button>
-                <button class="btn hex-key">D</button>
-                <button class="btn hex-key">E</button>
-                <button class="btn hex-key">F</button>
-            </div>
+    <main class="calculator-container">
+        <div class="calculator" aria-label="程序员计算器">
+            <header class="display-container">
+                <div class="theme-toggle">
+                    <button id="theme-button" aria-label="切换暗色/亮色主题">
+                        <span class="material-symbols-rounded">dark_mode</span>
+                    </button>
+                </div>
+                <div class="calculator-expression" aria-live="polite" aria-label="计算表达式"></div>
+                <div class="display-row" role="group" aria-label="十六进制显示区">
+                    <button class="display-label" data-system="16">HEX</button>
+                    <div class="hex-display" aria-live="polite">FF</div>
+                </div>
+                <div class="display-row" role="group" aria-label="十进制显示区">
+                    <button class="display-label" data-system="10">DEC</button>
+                    <div class="calculator-display" aria-live="polite">255</div>
+                </div>
+                <div class="display-row" role="group" aria-label="八进制显示区">
+                    <button class="display-label" data-system="8">OCT</button>
+                    <div class="oct-display" aria-live="polite">377</div>
+                </div>
+                <div class="display-row" role="group" aria-label="二进制显示区">
+                    <button class="display-label" data-system="2">BIN</button>
+                    <div class="binary-representation" aria-live="polite">11111111</div>
+                </div>
+                
+                <div class="mode-selector">
+                    <div class="select-wrapper">
+                        <select id="bit-width" aria-label="选择位宽">
+                            <option value="8">8位</option>
+                            <option value="16">16位</option>
+                            <option value="32" selected>32位</option>
+                            <option value="64">64位</option>
+                        </select>
+                        <span class="material-symbols-rounded select-icon">expand_more</span>
+                    </div>
+                    <div class="sign-toggle" role="radiogroup" aria-label="符号模式">
+                        <input type="radio" id="signed" name="sign-mode" value="signed" checked>
+                        <label for="signed">有符号</label>
+                        <input type="radio" id="unsigned" name="sign-mode" value="unsigned">
+                        <label for="unsigned">无符号</label>
+                    </div>
+                </div>
+                <div class="range-indicator" aria-live="polite">有符号 32位: -2147483648 ~ 2147483647</div>
+            </header>
             
-            <div class="main-keys">
-                <div class="row">
-                    <button class="btn" data-action="shift">↑</button>
-                    <button class="btn" data-action="clear">CE</button>
-                    <button class="btn" data-action="clear">C</button>
-                    <button class="btn" data-action="backspace">Back</button>
-                    <button class="btn" data-action="divide">÷</button>
+            <div class="calculator-keypad">
+                <div class="hex-keys-row">
+                    <button class="btn hex-key" aria-label="十六进制A">A</button>
+                    <button class="btn hex-key" aria-label="十六进制B">B</button>
+                    <button class="btn hex-key" aria-label="十六进制C">C</button>
+                    <button class="btn hex-key" aria-label="十六进制D">D</button>
+                    <button class="btn hex-key" aria-label="十六进制E">E</button>
+                    <button class="btn hex-key" aria-label="十六进制F">F</button>
                 </div>
-                <div class="row">
-                    <button class="btn" data-action="and">And</button>
-                    <button class="btn digit">7</button>
-                    <button class="btn digit">8</button>
-                    <button class="btn digit">9</button>
-                    <button class="btn" data-action="multiply">×</button>
-                </div>
-                <div class="row">
-                    <button class="btn" data-action="or">Or</button>
-                    <button class="btn digit">4</button>
-                    <button class="btn digit">5</button>
-                    <button class="btn digit">6</button>
-                    <button class="btn" data-action="subtract">-</button>
-                </div>
-                <div class="row">
-                    <button class="btn" data-action="not">Not</button>
-                    <button class="btn digit">1</button>
-                    <button class="btn digit">2</button>
-                    <button class="btn digit">3</button>
-                    <button class="btn" data-action="add">+</button>
-                </div>
-                <div class="row">
-                    <button class="btn" data-action="open-paren">(</button>
-                    <button class="btn" data-action="close-paren">)</button>
-                    <button class="btn digit zero">0</button>
-                    <button class="btn" data-action="equals">=</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="calculator-footer">
-            <div class="mode-selector">
-                <select id="num-system">
-                    <option value="10">十进制 (DEC)</option>
-                    <option value="16">十六进制 (HEX)</option>
-                    <option value="2">二进制 (BIN)</option>
-                    <option value="8">八进制 (OCT)</option>
-                </select>
-                <select id="bit-width">
-                    <option value="8">8位</option>
-                    <option value="16">16位</option>
-                    <option value="32" selected>32位</option>
-                    <option value="64">64位</option>
-                </select>
-                <div class="sign-toggle">
-                    <input type="radio" id="signed" name="sign-mode" value="signed" checked>
-                    <label for="signed">有符号</label>
-                    <input type="radio" id="unsigned" name="sign-mode" value="unsigned">
-                    <label for="unsigned">无符号</label>
+                
+                <div class="main-keys">
+                    <div class="row">
+                        <button class="btn" data-action="shift" aria-label="移位">
+                            <span class="material-symbols-rounded">shift</span>
+                        </button>
+                        <button class="btn" data-action="clear" aria-label="清除当前输入">CE</button>
+                        <button class="btn" data-action="clear" aria-label="完全清除">C</button>
+                        <button class="btn" data-action="backspace" aria-label="退格">
+                            <span class="material-symbols-rounded">backspace</span>
+                        </button>
+                        <button class="btn" data-action="divide" aria-label="除以">÷</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn" data-action="and" aria-label="位与运算">AND</button>
+                        <button class="btn digit" aria-label="数字7">7</button>
+                        <button class="btn digit" aria-label="数字8">8</button>
+                        <button class="btn digit" aria-label="数字9">9</button>
+                        <button class="btn" data-action="multiply" aria-label="乘以">×</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn" data-action="or" aria-label="位或运算">OR</button>
+                        <button class="btn digit" aria-label="数字4">4</button>
+                        <button class="btn digit" aria-label="数字5">5</button>
+                        <button class="btn digit" aria-label="数字6">6</button>
+                        <button class="btn" data-action="subtract" aria-label="减去">−</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn" data-action="not" aria-label="位非运算">NOT</button>
+                        <button class="btn digit" aria-label="数字1">1</button>
+                        <button class="btn digit" aria-label="数字2">2</button>
+                        <button class="btn digit" aria-label="数字3">3</button>
+                        <button class="btn" data-action="add" aria-label="加上">+</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn" data-action="open-paren" aria-label="左括号">(</button>
+                        <button class="btn" data-action="close-paren" aria-label="右括号">)</button>
+                        <button class="btn digit zero" aria-label="数字0">0</button>
+                        <button class="btn" data-action="equals" aria-label="等于">=</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
     
     <script src="src/js/calculator.js"></script>
 </body>
