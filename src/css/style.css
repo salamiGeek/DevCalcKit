@@ -15,22 +15,15 @@ body {
 
 .calculator {
     width: 360px;
-    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    background-color: #eaeaea;
+    background-color: #fff;
 }
 
-.calculator-header {
-    background-color: #333;
-    color: white;
+.calculator-footer {
+    background-color: #f8f8f8;
     padding: 10px;
-}
-
-.header-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px;
+    border-top: 1px solid #ddd;
 }
 
 .mode-selector {
@@ -44,7 +37,7 @@ select {
     padding: 4px;
     border-radius: 4px;
     border: 1px solid #ccc;
-    background: #f9f9f9;
+    background: #fff;
     font-size: 12px;
 }
 
@@ -58,36 +51,69 @@ select {
 .display-container {
     padding: 15px;
     background-color: #fff;
+    border-bottom: 1px solid #eee;
 }
 
+.display-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.display-label {
+    width: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #4285f4;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.display-label:hover {
+    background-color: #e6f0ff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 当前选择的进制高亮显示 */
+.calculator.hex .display-row:nth-child(1) .display-label,
+.calculator.dec .display-row:nth-child(2) .display-label,
+.calculator.oct .display-row:nth-child(3) .display-label,
+.calculator.bin .display-row:nth-child(4) .display-label {
+    background-color: #e6f0ff;
+    color: #0066ff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.hex-display,
+.calculator-display,
+.oct-display,
 .binary-representation {
     font-family: monospace;
-    font-size: 12px;
-    color: #666;
-    overflow-x: auto;
+    font-size: 20px;
+    text-align: right;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
-    height: 20px;
-    margin-bottom: 5px;
+}
+
+.hex-display {
+    color: #000;
 }
 
 .calculator-display {
-    font-size: 32px;
-    text-align: right;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-bottom: 5px;
-    height: 40px;
+    color: #000;
 }
 
-.calculator-expression {
-    font-size: 14px;
-    color: #888;
-    text-align: right;
-    height: 20px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.oct-display {
+    color: #000;
+}
+
+.binary-representation {
+    font-size: 20px;
+    color: #000;
 }
 
 .calculator-keypad {
@@ -95,15 +121,11 @@ select {
     flex-direction: column;
 }
 
-.function-keys {
+.hex-keys-row {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 1px;
-    background-color: #ddd;
-}
-
-.function-keys .btn {
-    background-color: #e9e9e9;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #eee;
 }
 
 .main-keys {
@@ -118,20 +140,21 @@ select {
 .btn {
     flex: 1;
     border: none;
-    background-color: #f5f5f5;
+    background-color: #f8f8f8;
     height: 50px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.1s;
-    border: 1px solid #ddd;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
 }
 
 .btn:hover {
-    background-color: #e0e0e0;
+    background-color: #eee;
 }
 
 .btn:active {
-    background-color: #d0d0d0;
+    background-color: #e0e0e0;
 }
 
 .digit {
@@ -139,11 +162,12 @@ select {
 }
 
 .zero {
-    flex: 2;
+    flex: 1;
 }
 
 .hex-key {
-    background-color: #f0f0f0;
+    background-color: #f8f8f8;
+    font-weight: bold;
 }
 
 .hex-key.enabled {

@@ -16,8 +16,75 @@
 </head>
 <body>
     <div class="calculator">
-        <div class="calculator-header">
-            <div class="header-title">嵌入式程序员计算器</div>
+        <div class="display-container">
+            <div class="calculator-expression"></div>
+            <div class="display-row">
+                <div class="display-label">HEX</div>
+                <div class="hex-display">FF</div>
+            </div>
+            <div class="display-row">
+                <div class="display-label">DEC</div>
+                <div class="calculator-display">255</div>
+            </div>
+            <div class="display-row">
+                <div class="display-label">OCT</div>
+                <div class="oct-display">377</div>
+            </div>
+            <div class="display-row">
+                <div class="display-label">BIN</div>
+                <div class="binary-representation">11111111</div>
+            </div>
+        </div>
+        
+        <div class="calculator-keypad">
+            <div class="hex-keys-row">
+                <button class="btn hex-key">A</button>
+                <button class="btn hex-key">B</button>
+                <button class="btn hex-key">C</button>
+                <button class="btn hex-key">D</button>
+                <button class="btn hex-key">E</button>
+                <button class="btn hex-key">F</button>
+            </div>
+            
+            <div class="main-keys">
+                <div class="row">
+                    <button class="btn" data-action="shift">↑</button>
+                    <button class="btn" data-action="clear">CE</button>
+                    <button class="btn" data-action="clear">C</button>
+                    <button class="btn" data-action="backspace">Back</button>
+                    <button class="btn" data-action="divide">÷</button>
+                </div>
+                <div class="row">
+                    <button class="btn" data-action="and">And</button>
+                    <button class="btn digit">7</button>
+                    <button class="btn digit">8</button>
+                    <button class="btn digit">9</button>
+                    <button class="btn" data-action="multiply">×</button>
+                </div>
+                <div class="row">
+                    <button class="btn" data-action="or">Or</button>
+                    <button class="btn digit">4</button>
+                    <button class="btn digit">5</button>
+                    <button class="btn digit">6</button>
+                    <button class="btn" data-action="subtract">-</button>
+                </div>
+                <div class="row">
+                    <button class="btn" data-action="not">Not</button>
+                    <button class="btn digit">1</button>
+                    <button class="btn digit">2</button>
+                    <button class="btn digit">3</button>
+                    <button class="btn" data-action="add">+</button>
+                </div>
+                <div class="row">
+                    <button class="btn" data-action="open-paren">(</button>
+                    <button class="btn" data-action="close-paren">)</button>
+                    <button class="btn digit zero">0</button>
+                    <button class="btn" data-action="equals">=</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calculator-footer">
             <div class="mode-selector">
                 <select id="num-system">
                     <option value="10">十进制 (DEC)</option>
@@ -36,62 +103,6 @@
                     <label for="signed">有符号</label>
                     <input type="radio" id="unsigned" name="sign-mode" value="unsigned">
                     <label for="unsigned">无符号</label>
-                </div>
-            </div>
-        </div>
-        
-        <div class="display-container">
-            <div class="binary-representation"></div>
-            <div class="calculator-display">0</div>
-            <div class="calculator-expression"></div>
-        </div>
-        
-        <div class="calculator-keypad">
-            <div class="function-keys">
-                <button class="btn" data-action="lsh">Lsh</button>
-                <button class="btn" data-action="rsh">Rsh</button>
-                <button class="btn" data-action="or">Or</button>
-                <button class="btn" data-action="xor">Xor</button>
-                <button class="btn" data-action="not">Not</button>
-                <button class="btn" data-action="and">And</button>
-            </div>
-            <div class="main-keys">
-                <div class="row">
-                    <button class="btn hex-key" disabled>A</button>
-                    <button class="btn hex-key" disabled>B</button>
-                    <button class="btn" data-action="clear">C</button>
-                    <button class="btn" data-action="backspace">⌫</button>
-                    <button class="btn" data-action="divide">÷</button>
-                </div>
-                <div class="row">
-                    <button class="btn hex-key" disabled>C</button>
-                    <button class="btn hex-key" disabled>D</button>
-                    <button class="btn digit">7</button>
-                    <button class="btn digit">8</button>
-                    <button class="btn digit">9</button>
-                    <button class="btn" data-action="multiply">×</button>
-                </div>
-                <div class="row">
-                    <button class="btn hex-key" disabled>E</button>
-                    <button class="btn hex-key" disabled>F</button>
-                    <button class="btn digit">4</button>
-                    <button class="btn digit">5</button>
-                    <button class="btn digit">6</button>
-                    <button class="btn" data-action="subtract">-</button>
-                </div>
-                <div class="row">
-                    <button class="btn" data-action="mod">Mod</button>
-                    <button class="btn" data-action="rol">RoL</button>
-                    <button class="btn digit">1</button>
-                    <button class="btn digit">2</button>
-                    <button class="btn digit">3</button>
-                    <button class="btn" data-action="add">+</button>
-                </div>
-                <div class="row">
-                    <button class="btn" data-action="ror">RoR</button>
-                    <button class="btn" data-action="neg">±</button>
-                    <button class="btn digit zero">0</button>
-                    <button class="btn" data-action="equals">=</button>
                 </div>
             </div>
         </div>
