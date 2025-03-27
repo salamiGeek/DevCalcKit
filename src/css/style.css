@@ -1,0 +1,177 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.calculator {
+    width: 360px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    background-color: #eaeaea;
+}
+
+.calculator-header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+.header-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.mode-selector {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+select {
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    font-size: 12px;
+}
+
+.sign-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+}
+
+.display-container {
+    padding: 15px;
+    background-color: #fff;
+}
+
+.binary-representation {
+    font-family: monospace;
+    font-size: 12px;
+    color: #666;
+    overflow-x: auto;
+    white-space: nowrap;
+    height: 20px;
+    margin-bottom: 5px;
+}
+
+.calculator-display {
+    font-size: 32px;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 5px;
+    height: 40px;
+}
+
+.calculator-expression {
+    font-size: 14px;
+    color: #888;
+    text-align: right;
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.calculator-keypad {
+    display: flex;
+    flex-direction: column;
+}
+
+.function-keys {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background-color: #ddd;
+}
+
+.function-keys .btn {
+    background-color: #e9e9e9;
+}
+
+.main-keys {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+}
+
+.btn {
+    flex: 1;
+    border: none;
+    background-color: #f5f5f5;
+    height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.1s;
+    border: 1px solid #ddd;
+}
+
+.btn:hover {
+    background-color: #e0e0e0;
+}
+
+.btn:active {
+    background-color: #d0d0d0;
+}
+
+.digit {
+    background-color: #fff;
+}
+
+.zero {
+    flex: 2;
+}
+
+.hex-key {
+    background-color: #f0f0f0;
+}
+
+.hex-key.enabled {
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* 数据系统切换时的样式变化 */
+.calculator.dec .hex-key {
+    opacity: 0.5;
+}
+
+.calculator.hex .hex-key {
+    opacity: 1;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .calculator {
+        width: 100%;
+        max-width: 360px;
+        margin: 0 10px;
+    }
+    
+    .btn {
+        height: 45px;
+        font-size: 14px;
+    }
+} 

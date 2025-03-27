@@ -1,0 +1,102 @@
+<!--
+ * @Author: zhushi zhushi@uni-ubi.com
+ * @Date: 2025-03-26 21:53:25
+ * @LastEditors: zhushi zhushi@uni-ubi.com
+ * @LastEditTime: 2025-03-26 23:05:28
+ * @FilePath: /codeCalculator/index.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>嵌入式程序员计算器</title>
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+    <div class="calculator">
+        <div class="calculator-header">
+            <div class="header-title">嵌入式程序员计算器</div>
+            <div class="mode-selector">
+                <select id="num-system">
+                    <option value="10">十进制 (DEC)</option>
+                    <option value="16">十六进制 (HEX)</option>
+                    <option value="2">二进制 (BIN)</option>
+                    <option value="8">八进制 (OCT)</option>
+                </select>
+                <select id="bit-width">
+                    <option value="8">8位</option>
+                    <option value="16">16位</option>
+                    <option value="32" selected>32位</option>
+                    <option value="64">64位</option>
+                </select>
+                <div class="sign-toggle">
+                    <input type="radio" id="signed" name="sign-mode" value="signed" checked>
+                    <label for="signed">有符号</label>
+                    <input type="radio" id="unsigned" name="sign-mode" value="unsigned">
+                    <label for="unsigned">无符号</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="display-container">
+            <div class="binary-representation"></div>
+            <div class="calculator-display">0</div>
+            <div class="calculator-expression"></div>
+        </div>
+        
+        <div class="calculator-keypad">
+            <div class="function-keys">
+                <button class="btn" data-action="lsh">Lsh</button>
+                <button class="btn" data-action="rsh">Rsh</button>
+                <button class="btn" data-action="or">Or</button>
+                <button class="btn" data-action="xor">Xor</button>
+                <button class="btn" data-action="not">Not</button>
+                <button class="btn" data-action="and">And</button>
+            </div>
+            <div class="main-keys">
+                <div class="row">
+                    <button class="btn hex-key" disabled>A</button>
+                    <button class="btn hex-key" disabled>B</button>
+                    <button class="btn" data-action="clear">C</button>
+                    <button class="btn" data-action="backspace">⌫</button>
+                    <button class="btn" data-action="divide">÷</button>
+                </div>
+                <div class="row">
+                    <button class="btn hex-key" disabled>C</button>
+                    <button class="btn hex-key" disabled>D</button>
+                    <button class="btn digit">7</button>
+                    <button class="btn digit">8</button>
+                    <button class="btn digit">9</button>
+                    <button class="btn" data-action="multiply">×</button>
+                </div>
+                <div class="row">
+                    <button class="btn hex-key" disabled>E</button>
+                    <button class="btn hex-key" disabled>F</button>
+                    <button class="btn digit">4</button>
+                    <button class="btn digit">5</button>
+                    <button class="btn digit">6</button>
+                    <button class="btn" data-action="subtract">-</button>
+                </div>
+                <div class="row">
+                    <button class="btn" data-action="mod">Mod</button>
+                    <button class="btn" data-action="rol">RoL</button>
+                    <button class="btn digit">1</button>
+                    <button class="btn digit">2</button>
+                    <button class="btn digit">3</button>
+                    <button class="btn" data-action="add">+</button>
+                </div>
+                <div class="row">
+                    <button class="btn" data-action="ror">RoR</button>
+                    <button class="btn" data-action="neg">±</button>
+                    <button class="btn digit zero">0</button>
+                    <button class="btn" data-action="equals">=</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="src/js/calculator.js"></script>
+</body>
+</html> 
