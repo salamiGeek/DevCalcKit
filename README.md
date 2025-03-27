@@ -72,4 +72,4 @@
 
 ## 许可证
 
-本项目采用MIT许可证开源 - 详见[LICENSE](LICENSE)文件 
+本项目采用GPL许可证开源 - 详见[LICENSE](LICENSE)文件 
