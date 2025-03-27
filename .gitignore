@@ -39,9 +39,6 @@ yarn-error.log*
 .npm/
 .eslintcache
 
-# Cursor专用文件
-.cursor/
-
 # 备份文件
 *.bak
 *~
